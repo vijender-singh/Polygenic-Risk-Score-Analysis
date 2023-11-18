@@ -19,7 +19,7 @@
 7. [QC of Target Data](#qc-of-target-data)
    - [Genome Build](#genome-build-of-target-data)
    - [Standard GWAS QC](#standard-gwas-qc-of-target-data)
-   - - [Removing highly correlated SNPs](#step1:-removing-highly-correlated-snps)
+   - - [Removing highly correlated SNPs](#step1-removing-highly-correlated-snps)
    - - [Heterozygosity rates](#step2-heterozygosity-rates-can-then-be-computed-using-plink)
    - [Mismatching SNPs](#mismatching-snps-in-target-data)
    - [Duplicate SNPs](#duplicate-snps-in-target-data)
