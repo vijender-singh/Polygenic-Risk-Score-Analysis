@@ -1,4 +1,46 @@
 ## Polygenic Risk Score Analysis (PRS)
+### Contents
+1. [Acknowledgement/source](#source)
+2. [Pre-requisite to follow the tutrorial](#prerequisite)
+3. [Download Dataset](#datasets)
+4. [What is polygenic Risk Score](#what-is-polygenic-risk-score?)
+5. [Terminologies used in Polygenic Risk Score  analysis](#terminology)
+6. [QC of base data](#qc-of-base-data)
+   - [Heritability Check](#heritability-check)
+   - [Effect Allele](#effect-allele)
+   - [Genome Build verification](#genome-build)
+   - [GWAS related QC](#standard-gwas-qc)
+   - [Identify ambiguity in SNPs](#ambigous-snps)
+   - [Identify Mismatching SNPs](#mismatching-snps)
+   - [Identify and remove duplicate SNPs](#duplicate-snps)
+   - [Sex verification of samples](#sex-chromosomes)
+   - [Identify overlapping samples between Base and target data](#sample-overlap)
+   - [Identify Relatednes between individuals](#relatedness)
+7. [QC of Target Data](#qc-of-target-data)
+   - [Genome Build](#genome-build-of-target-data)
+   - [Standard GWAS QC](#standard-gwas-qc-of-target-data)
+   - - [Removing highly correlated SNPs](#step1:-removing-highly-correlated-snps)
+   - - [Heterozygosity rates](#step2-heterozygosity-rates-can-then-be-computed-using-plink)
+   - [Mismatching SNPs](#mismatching-snps-in-target-data)
+   - [Duplicate SNPs](#duplicate-snps-in-target-data)
+   - [Sex Chromosome](#sex-chromosomes-in-target-data)
+   - [Sample Overlap in Target Data](#sample-overlap-in-target-data)
+   - [Sample Relatedness](#relatedness-of-individuals-target-data)
+8. [Generate final QCed Target file](#generate-final-qc-target-file)
+9. [PRS analysis](#calculating-and-analysis-of-prs)
+   - [PRS with PLINK](#plink)
+   - - [Dataset used in PLINK](#required-dataset)
+   - - [Effect size](#effect-size-standardisation)
+   - - [Clumping](#clumping)
+   - - [Generating PRS](#generating-prs-with-plink)
+   - - [Accounting for Population Stratification](#accounting-for-population-stratification)
+   - - [Finding "best-fit" PRS](#finding-best-fit-prs)
+
+
+
+
+
+
 ### Source
 The code here is based on the following 2 sources
  1. [Choi, S.W., Mak, T.SH. & O’Reilly, P.F. Tutorial: a guide to performing polygenic risk score analyses. Nat Protoc 15, 2759–2772 (2020)](https://www.nature.com/articles/s41596-020-0353-1)
@@ -305,10 +347,10 @@ In summary, the passage emphasizes the importance of addressing the issue of clo
 ## QC of Target Data
 
 This section will use PLINK for some parts so please install PLINK.
-### Genome Build
+### Genome Build of Target data
 Genome build is same between base and target data.
 
-### Standard GWAS QC
+### Standard GWAS QC Target data
 
 In this step we will filter the SNPs based on the QC parameters that are set for target data.  To achieve this we will be using PLINK command line.
 #### **Plink flags and filters** 
@@ -512,7 +554,7 @@ dim(df_filter)
 df[df$F > (m+(3*std)) | df$F < (m-(3*std)),]
 ```
 
-### Mismatching SNPs
+### Mismatching SNPs in Target data
 
 In the scenerio where there is allele mismatching between base and target data due to the fact that they were reported from different strands of DNA.  This can be resolved by switching/flipping the strands and reporting the complementary allele of the reported allele in target.  Most PRS application can perform strand flipping in case of allele mismatch, however if a user want to do it indfependently below is the code to show that.  Also we may also need to recode the SNPs in target where the SNPs are not reported in correct format.  This will be in cases where base data have **A1** as effect allele and **A2** as Non-effect allele but the target data has **A1** as Non-effect allele and **A2** as effect allele. This can also be combined with bases in target reported from complementary strands. Basically, recoding + strand_flipping
 
@@ -695,11 +737,11 @@ write.table(
 )
 ```
 
-### Duplicate SNPs
+### Duplicate SNPs in Target data
 
 Remove duplicate SNPsin target dataset using R or anyother method.  This dataset is simulated so it doesnot have any duplicates.
 
-### Sex Chromosomes
+### Sex Chromosomes in Target data
 This step to identify inconsistencies between reported sex and the sex identified based on the genotype.   The Reason behind this match could be many. Here we will use PLINK to test X chromosome homozygosity estimate (F statistic) to determine the sex of individuals in a genetic dataset (target).
 
 * **F Statistic Calculation**: PLINK calculates an F statistic for each individual based on their X chromosome genotypes. This F statistic measures the degree of homozygosity on the X chromosome. A low F statistic suggests that an individual has heterozygous X chromosome genotypes, which is more common in females. A high F statistic suggests homozygosity on the X chromosome, which is more common in males.
@@ -785,7 +827,7 @@ dim(qc.ok)
 write.table(qc.ok[,c("FID","IID")], "EUR.QC.valid",row.names=F, col.names=F, sep="\t", quote=F)
 ```
 
-### Sample Overlap
+### Sample Overlap in Target data
 
 Sample overlap is a critical consideration when developing and using polygenic risk scores (PRS) in genetic research and clinical applications. Sample overlap refers to the situation where individuals or samples are included in both the discovery (training) dataset and the target (validation or application) dataset used for PRS analysis. The importance of sample overlap in PRS studies can be understood in several key ways:
 
@@ -808,7 +850,7 @@ To address these issues, it is often recommended to use independent discovery an
 
 Since the dataset is simulated there is no sample overlap.
 
-### Relatedness
+### Relatedness of individuals Target data
 Closely related individuals in the target data can lead to overfitting when calculating polygenic risk scores (PRS). To address this issue, we're considering pruning closely related individuals by removing those who have a first or second-degree relative in the sample (relatedness coefficient π > 0.125). Here's how you can perform this pruning using PLINK, a commonly used tool in genetic data analysis
 
 ```
@@ -874,7 +916,7 @@ Calculating a polygenic risk score (PRS) using `plink` involves several steps, i
 - **EUR.height**	*This file contains the phenotype of the samples*
 - **EUR.cov**	*This file contains the covariates of the samples*
 
-#### Effect Size
+#### Effect Size Standardisation
 In polygenic risk score (PRS) calculation, effect size transformation methods are used to standardize the effect sizes (usually beta coefficients) obtained from a genome-wide association study (GWAS) before incorporating them into the PRS calculation. Standardization helps ensure that effect sizes from different SNPs are on a common scale and can be combined effectively. Here are some commonly used effect size transformation methods:
 
 1. **Z-Score Transformation**:
@@ -1018,7 +1060,7 @@ awk 'NR!=1{print $3}' EUR.clumped >  EUR.valid.snp
 ```
 $3 because the third column contains the SNP ID
 
-#### Generate PRS
+#### Generating PRS with PLINK
 PLINK provides two options for calculating polygenic risk scores (PRS): --score and --q-score-range. These options allow you to calculate PRS based on external summary statistics or reference panels. Here's an explanation of files needed for it.
 
 1. The base data file : **height_GWASQC_dedup_transformed.txt**
@@ -1175,8 +1217,8 @@ Note : If the base and target samples are collected from different worldwide pop
 
 ----------
 
-### FInding "best-fit" PRS
-This is from the original tutorial as it iq pretty concise.
+### Finding best-fit PRS
+This is from the original tutorial as it is pretty concise.
 
 The P-value threshold that provides the "best-fit" PRS under the C+T method is usually unknown. To approximate the "best-fit" PRS, we can perform a regression between PRS calculated at a range of P-value thresholds and then select the PRS that explains the highest phenotypic variance (please see Section 4.6 of our paper on overfitting issues). This can be achieved using R as follows:
 ```{R}
