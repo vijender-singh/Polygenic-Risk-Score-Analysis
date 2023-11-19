@@ -41,7 +41,7 @@
 
 
 
-### Source
+### Acknowledgement/Source
 The code here is based on the following 2 sources
  1. [Choi, S.W., Mak, T.SH. & O’Reilly, P.F. Tutorial: a guide to performing polygenic risk score analyses. Nat Protoc 15, 2759–2772 (2020)](https://www.nature.com/articles/s41596-020-0353-1)
  2. https://choishingwan.github.io/PRS-Tutorial/
