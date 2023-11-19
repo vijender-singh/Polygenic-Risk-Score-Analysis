@@ -1,7 +1,7 @@
 ## Polygenic Risk Score Analysis (PRS)
 ### Contents
 1. [Acknowledgement/source](#source)
-2. [Pre-requisite to follow the tutrorial](#prerequisite)
+2. [Pre-requisite to follow the tutorial](#prerequisite)
 3. [Download Dataset](#datasets)
 4. [What is polygenic Risk Score](#what-is-polygenic-risk-score?)
 5. [Terminologies used in Polygenic Risk Score  analysis](#terminology)
