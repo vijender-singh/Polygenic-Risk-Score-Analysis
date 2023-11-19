@@ -54,8 +54,8 @@ The tutorial require basic knowledge of following
 
 ### Datasets
 We will use the dataset listed in the tutorial but the code can be extended for custom dataset.  Here we will have 2 data sets. The nature of these data is explained in terminology section below.
- 1. [Base data](https://choishingwan.github.io/PRS-Tutorial/base/). 
- 2. [Target data](https://drive.google.com/file/d/1uhJR_3sn7RA8U5iYQbcmTp6vFdQiF4F2/view?usp=sharing): Simulated data based on the 1000 Genomes Project European samples
+ 1. [Base data](https://drive.google.com/file/d/1hUgPewcOs4ogWJIzD7UrCUectD0Aoc1J/view?usp=sharing). 
+ 2. [Target data](https://drive.google.com/file/d/10fWD4z_hbE3YXIdRPs1mvbGlPcpIfdQK/view?usp=sharing): Simulated data based on the 1000 Genomes Project European samples
 
 ### What is Polygenic Risk Score?
 The definition you provided succinctly explains what polygenic risk scores (PRSs) are and how they are calculated. Let's break it down:
